@@ -1,14 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using WaifuDatingApp.API.Data;
+using WaifuDatingApp.API.DTOs;
 using WaifuDatingApp.API.Models;
 
 namespace WaifuDatingApp.API.Controllers
 {
-    [Route("api/[controller])")]
+    [Route("api/[controller]")]
     public class AuthController : Controller
     {
         private readonly IAuthRepository _repo;
@@ -18,21 +16,23 @@ namespace WaifuDatingApp.API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(string username, string password)
+        public async Task<IActionResult> Register([FromBody] UserForRegisterDTO dto)
         {
-            //Validate request;
+            dto.Username = dto.Username.ToLower();
 
-            username = username.ToLower();
+            if (await _repo.UserExists(dto.Username))
+                ModelState.AddModelError("Username", "Username already exists");
 
-            if (await _repo.UserExists(username))
-                return BadRequest("Username is already taken");
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             var userToCreate = new User
             {
-                Username = username
+                Username = dto.Username
             };
 
-            var createUser = await _repo.Register(userToCreate, password);
+            var createUser = await _repo.Register(userToCreate, dto.Password);
 
             return StatusCode(201);
         }
