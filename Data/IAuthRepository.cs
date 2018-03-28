@@ -9,5 +9,6 @@ namespace WaifuDatingApp.API.Data
         Task<User> Register(User user, string pass);
         Task<User> LoginAsync(string username, string pass);
         Task<bool> UserExists(string username);
+        
     }
 }
