@@ -16,7 +16,7 @@ namespace WaifuDatingApp.API.Data
             _context = context;
         }
 
-        public async Task<User> LoginAsync(string username, string pass)
+        public async Task<User> Login(string username, string pass)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Username == username);
 
