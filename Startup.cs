@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using WaifuDatingApp.API.Helpers;
 
 namespace WaifuDatingApp.API
@@ -30,6 +31,7 @@ namespace WaifuDatingApp.API
             services.AddDbContext<DataContext>(
                 x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")
                 ));
+            services.AddTransient<Seed>();
             services.AddMvc();
             services.AddCors();
             services.AddScoped<IAuthRepository, AuthRepository>();
@@ -47,7 +49,7 @@ namespace WaifuDatingApp.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, Seed seeder)
         {
             if (env.IsDevelopment())
             {
@@ -70,7 +72,7 @@ namespace WaifuDatingApp.API
                     });
                 });
             }
-
+            //seeder.SeedUsers();
             app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials());
             app.UseAuthentication();
             app.UseMvc();

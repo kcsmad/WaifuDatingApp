@@ -56,6 +56,7 @@ namespace WaifuDatingApp.API.Data
 
             return user;
         }
+        
         private void CreatePasswordHash(string pass, out byte[] passHash, out byte[] passSalt)
         {
             using (var hmac = new System.Security.Cryptography.HMACSHA512())
