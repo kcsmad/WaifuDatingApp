@@ -48,6 +48,8 @@ namespace WaifuDatingApp.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody]UserForLoginDTO dto)
         {
+            throw new Exception("Computer says no!");
+
             var userFromRepo = await _repo.Login(dto.Username.ToLower(), dto.Password);
 
             if (userFromRepo == null)
@@ -56,21 +58,24 @@ namespace WaifuDatingApp.API.Controllers
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_config.GetSection("AppSettings:Token").Value);
             var tokenDescriptor = new SecurityTokenDescriptor()
+            {
+                Subject = new ClaimsIdentity(new Claim[]
                 {
-                    Subject = new ClaimsIdentity( new Claim[]
-                    {
-                        new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
-                        new Claim(ClaimTypes.Name, userFromRepo.Username)
-                    }),
-                    Issuer = "",
-                    Expires = DateTime.Now.AddDays(1),
-                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
+                    new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
+                    new Claim(ClaimTypes.Name, userFromRepo.Username)
+                }),
+                Issuer = "",
+                Expires = DateTime.Now.AddDays(1),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha512Signature)
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
-            return Ok(new { tokenString });
+            return Ok(new {tokenString});
+
+            
         }
     }
 }
