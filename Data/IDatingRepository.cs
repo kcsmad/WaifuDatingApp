@@ -5,7 +5,7 @@ using WaifuDatingApp.API.Models;
 
 namespace WaifuDatingApp.API.Data
 {
-    public interface IDataRepository
+    public interface IDatingRepository
     {
         void Add<T>(T entity) where T : class;
         void Delete<T>(T entity) where T : class;

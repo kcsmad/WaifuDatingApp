@@ -32,10 +32,9 @@ namespace WaifuDatingApp.API
                 x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")
                 ));
             services.AddTransient<Seed>();
-            services.AddMvc();
             services.AddCors();
             services.AddScoped<IAuthRepository, AuthRepository>();
-            services.AddScoped<IDataRepository, DatingRepository>();
+            services.AddScoped<IDatingRepository, DatingRepository>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -46,6 +45,12 @@ namespace WaifuDatingApp.API
                         ValidateIssuer = false,
                         ValidateAudience = false
                     };
+                });
+            
+            
+            services.AddMvc().AddJsonOptions(opt =>
+                {
+                    opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                 });
         }
 

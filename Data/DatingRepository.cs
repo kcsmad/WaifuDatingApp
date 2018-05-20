@@ -5,7 +5,7 @@ using WaifuDatingApp.API.Models;
 
 namespace WaifuDatingApp.API.Data
 {
-    public class DatingRepository : IDataRepository
+    public class DatingRepository : IDatingRepository
     {
         private readonly DataContext _context;
 
